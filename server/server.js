@@ -6,7 +6,14 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://mongo/chat-room', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const MessageSchema = new mongoose.Schema({
-  content: String,
+  username: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: Object, // Change the data type to Object
+    required: true
+  },
   timestamp: { type: Date, default: Date.now },
 });
 
