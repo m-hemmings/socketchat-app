@@ -33,6 +33,7 @@ function ChatForm({ handleSubmit, newMessage, setNewMessage, setUsernameCallback
     <>
       <form onSubmit={handleFormSubmit}>
         <input
+          id="message-input"
           type="text"
           value={newMessage}
           onChange={(event) => setNewMessage(event.target.value)}
@@ -49,7 +50,7 @@ function ChatForm({ handleSubmit, newMessage, setNewMessage, setUsernameCallback
               type="text"
               name="username"
               placeholder="Enter username"
-              id="message-input"
+              
             />
             <button type="submit">Set username</button>
             <button onClick={handleModalCancel}>Cancel</button>
