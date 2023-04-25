@@ -31,7 +31,7 @@ function App() {
       text: newMessage,
       timestamp: new Date().getTime(),
     };
-    socketIOClient(ENDPOINT).emit("send_message", messageObject);
+    socketIOClient(ENDPOINT).emit("message", messageObject);
     setMessages([...messages, messageObject]);
     setNewMessage("");
   };
