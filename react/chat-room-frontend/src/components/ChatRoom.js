@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
-import MessageList from './MessageList';
-import MessageInput from './MessageInput';
+import ChatMessages from './ChatMessages';
+import ChatForm from './ChatForm';
 
 const ENDPOINT = "http://localhost:3123";
 
@@ -46,8 +46,6 @@ function ChatRoom() {
       },
     };
 
-    console.log(messageObject); // log the message object
-
     socket.emit("message", messageObject);
 
     setNewMessage("");
@@ -55,13 +53,14 @@ function ChatRoom() {
 
   return (
     <div>
-      <MessageList messages={messages} />
-      <MessageInput
+      <h1>Chat Room</h1>
+      <ChatMessages messages={messages} />
+      <ChatForm
+        handleSubmit={handleSubmit}
         newMessage={newMessage}
+        setNewMessage={setNewMessage}
         username={username}
-        onNewMessageChange={(event) => setNewMessage(event.target.value)}
-        onUsernameChange={(event) => setUsername(event.target.value)}
-        onSend={handleSubmit}
+        setUsername={setUsername}
       />
     </div>
   );
