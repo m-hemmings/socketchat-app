@@ -17,7 +17,12 @@ const server = http.createServer((req, res) => {
   res.end('Hello World\n');
 });
 
-const io = socketio(server);
+const io = socketio(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
 
 io.on('connection', (socket) => {
   console.log('A user connected');
