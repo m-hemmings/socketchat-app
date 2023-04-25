@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 
-const ENDPOINT = "http://localhost:3001"; // Replace with your Socket.IO server URL
+const ENDPOINT = "http://localhost:3123"; // Replace with your Socket.IO server URL
 
 function App() {
   const [messages, setMessages] = useState([]);
