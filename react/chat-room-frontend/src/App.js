@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 
-const ENDPOINT = "http://localhost:3123"; // Replace with your Socket.IO server URL
+const ENDPOINT = "http://localhost:3123";
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [username, setUsername] = useState("");
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
+    const newSocket = socketIOClient(ENDPOINT);
+
+    setSocket(newSocket);
+
+    return () => newSocket.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
 
     socket.on("connect", () => {
       console.log("Connected to server");
@@ -19,19 +28,22 @@ function App() {
       setMessages([...messages, message]);
     });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, [messages]);
+    socket.on("previous-messages", (messages) => {
+      setMessages(messages);
+    });
+  }, [socket, messages]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const messageObject = {
       username: username,
       text: newMessage,
       timestamp: new Date().getTime(),
     };
-    socketIOClient(ENDPOINT).emit("message", messageObject);
+
+    socket.emit("message", messageObject);
+
     setMessages([...messages, messageObject]);
     setNewMessage("");
   };
