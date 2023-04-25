@@ -1,0 +1,66 @@
+FROM ubuntu:22.04 AS builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary build dependencies
+RUN apt-get update && \
+	apt-get install -y \
+	build-essential \
+	libssl-dev \
+	git \
+	curl
+
+# Build and install nvm from source
+RUN git clone https://github.com/nvm-sh/nvm.git /root/.nvm && \
+	cd /root/.nvm && \
+	git checkout $(git describe --abbrev=0 --tags) && \
+	./install.sh && \
+	. /root/.nvm/nvm.sh && \
+	nvm install 16 && \
+	nvm use 16
+
+ENV PATH="/root/.nvm/versions/node/v16.14.0/bin/:${PATH}"
+
+# Clean up unnecessary files
+RUN apt-get remove -y \
+	build-essential \
+	libssl-dev \
+	git \
+	curl && \
+	apt-get autoremove -y && \
+	rm -rf /var/lib/apt/lists/* /root/.nvm/.git
+
+# Start from a clean base image
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary runtime dependencies
+RUN apt-get update && \
+	apt-get install -y \
+	wget \
+	curl \
+	git
+
+# Use nvm to install the latest version of node
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && \
+    export NVM_DIR="$HOME/.nvm" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    nvm install node && \
+    nvm use node
+
+# Install the latest version of npm
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm@latest
+
+# Clean up unnecessary files
+RUN apt-get remove -y \
+	curl \
+	git && \
+	apt-get autoremove -y && \
+	rm -rf /var/lib/apt/lists/*
+
+# Expose port 3000 and set command to tail /etc/hosts
+EXPOSE 3000
+CMD ["tail", "-f", "/etc/hosts"]
