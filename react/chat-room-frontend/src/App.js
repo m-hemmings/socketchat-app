@@ -37,10 +37,14 @@ function App() {
     event.preventDefault();
 
     const messageObject = {
-      username: username,
-      text: newMessage,
-      timestamp: new Date().getTime(),
-    };
+      user: {
+        username: username,
+      },
+      message: {
+        text: newMessage,
+        timestamp: new Date().getTime(),
+      }
+  };
 
     socket.emit("message", messageObject);
 
