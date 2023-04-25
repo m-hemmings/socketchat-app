@@ -15,12 +15,13 @@ function ChatForm({ handleSubmit, newMessage, setNewMessage, setUsernameCallback
     setShowModal(false);
   };
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    handleSubmit(event);
+    await handleSubmit(event);
     setNewMessage('');
     inputRef.current.focus();
   };
+
 
   useEffect(() => {
   if (inputRef.current) {
