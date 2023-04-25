@@ -11,6 +11,7 @@ function ChatRoom() {
   const [newMessage, setNewMessage] = useState("");
   const [username, setUsername] = useState("");
   const [socket, setSocket] = useState(null);
+  const [name, setName] = useState("");
 
   useEffect(() => {
     const newSocket = socketIOClient(ENDPOINT);
