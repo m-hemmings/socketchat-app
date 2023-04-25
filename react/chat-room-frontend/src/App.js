@@ -34,51 +34,52 @@ function App() {
   }, [socket, messages]);
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    const messageObject = {
-      user: {
-        username: username,
-      },
-      message: {
-        text: newMessage,
-        timestamp: new Date().getTime(),
-      }
+  const messageObject = {
+    username: username,
+    content: {
+      text: newMessage,
+      timestamp: new Date().getTime(),
+    },
   };
 
-    socket.emit("message", messageObject);
+  console.log(messageObject); // log the message object
 
-    setMessages([...messages, messageObject]);
-    setNewMessage("");
-  };
+  socket.emit("message", messageObject);
+
+  setNewMessage("");
+};
+
 
   return (
     <div>
-      <h1>Chat Room</h1>
-      <div>
-        {messages.map((message, index) => (
-          <div key={index}>
-            <span>{message.username}: </span>
-            <span>{message.text}</span>
-          </div>
-        ))}
-      </div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(event) => setNewMessage(event.target.value)}
-          placeholder="Enter message"
-        />
-        <input
-          type="text"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          placeholder="Enter username"
-        />
-        <button type="submit">Send</button>
-      </form>
+    <h1>Chat Room</h1>
+    <div>
+      {messages.map((message, index) => (
+        <div key={index}>
+          <span>{message.username}: </span>
+          <span>{message.content.text}</span>
+        </div>
+      ))}
     </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={newMessage}
+        onChange={(event) => setNewMessage(event.target.value)}
+        placeholder="Enter message"
+      />
+      <input
+        type="text"
+        value={username}
+        onChange={(event) => setUsername(event.target.value)}
+        placeholder="Enter username"
+      />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
   );
 }
 
