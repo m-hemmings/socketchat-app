@@ -24,6 +24,7 @@ function ChatForm({ handleSubmit, newMessage, setNewMessage, setUsernameCallback
 
   useEffect(() => {
   if (inputRef.current) {
+    setNewMessage('');
     inputRef.current.focus();
   }
 }, []);
