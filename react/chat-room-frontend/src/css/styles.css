@@ -1,0 +1,39 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.chat-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.form-container input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.form-container button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.form-container button:hover {
+  background-color: #3e8e41;
+}
