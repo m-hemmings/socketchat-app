@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import socketIOClient from 'socket.io-client';
 import ChatMessages from './ChatMessages';
 import ChatForm from './ChatForm';
-import '../css/styles.css'; // import the styles.css file
+import '../css/styles.css';
 
 const ENDPOINT = "http://localhost:3123";
 
 function ChatRoom() {
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
   const [newMessage, setNewMessage] = useState("");
   const [username, setUsername] = useState("");
   const [socket, setSocket] = useState(null);
-  const [name, setName] = useState("");
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const newSocket = socketIOClient(ENDPOINT);
@@ -36,6 +35,10 @@ function ChatRoom() {
     socket.on("previous-messages", (messages) => {
       setMessages(messages);
     });
+
+    socket.on("username", (username) => {
+      setUsername(username);
+    });
   }, [socket, messages]);
 
   const handleSubmit = (event) => {
@@ -52,19 +55,23 @@ function ChatRoom() {
     socket.emit("message", messageObject);
 
     setNewMessage("");
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   return (
-    <div className="container"> {/* use the "container" class from styles.css  */}
-      <div className="chat-container"> {/* use the "chat-container" class from styles.css */}
+    <div className="container">
+      <div className="chat-container">
         <ChatMessages messages={messages} />
       </div>
       <ChatForm
-        name={name}
-        message={message}
-        setName={setName}
-        setMessage={setMessage}
+        inputRef={inputRef}
+        message={newMessage}
+        setNewMessage={setNewMessage} 
         handleSubmit={handleSubmit}
+        setUsernameCallback={setUsername}
+        username={username}
       />
     </div>
   );
