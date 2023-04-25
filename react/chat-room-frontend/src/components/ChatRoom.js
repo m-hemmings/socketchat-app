@@ -8,6 +8,7 @@ const ENDPOINT = "http://localhost:3123";
 
 function ChatRoom() {
   const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
   const [newMessage, setNewMessage] = useState("");
   const [username, setUsername] = useState("");
   const [socket, setSocket] = useState(null);
@@ -60,7 +61,7 @@ function ChatRoom() {
       </div>
       <ChatForm
         name={name}
-        message={newMessage}
+        message={message}
         setName={setName}
         setMessage={setMessage}
         handleSubmit={handleSubmit}
