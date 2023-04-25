@@ -55,8 +55,8 @@ function ChatRoom() {
   };
 
   return (
-    <div className="container"> // use the "container" class from styles.css
-      <div className="chat-container"> // use the "chat-container" class from styles.css
+    <div className="container"> {/* use the "container" class from styles.css  */}
+      <div className="chat-container"> {/* use the "chat-container" class from styles.css */}
         <ChatMessages messages={messages} />
       </div>
       <ChatForm
