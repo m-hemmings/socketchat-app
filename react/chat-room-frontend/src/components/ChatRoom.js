@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 import ChatMessages from './ChatMessages';
 import ChatForm from './ChatForm';
+import '../css/styles.css'; // import the styles.css file
 
 const ENDPOINT = "http://localhost:3123";
 
@@ -52,15 +53,16 @@ function ChatRoom() {
   };
 
   return (
-    <div>
-      <h1>Chat Room</h1>
-      <ChatMessages messages={messages} />
+    <div className="container"> // use the "container" class from styles.css
+      <div className="chat-container"> // use the "chat-container" class from styles.css
+        <ChatMessages messages={messages} />
+      </div>
       <ChatForm
+        name={name}
+        message={newMessage}
+        setName={setName}
+        setMessage={setMessage}
         handleSubmit={handleSubmit}
-        newMessage={newMessage}
-        setNewMessage={setNewMessage}
-        username={username}
-        setUsername={setUsername}
       />
     </div>
   );
