@@ -1,10 +1,11 @@
 const http = require('http');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
-const { addTimestamps } = require('./utilities/logging');
+const { augmentedLog, augmentedError, augmentedDebug } = require('./utilities/logging');
 
-// Override console.log to include timestamps
-console.log = addTimestamps();
+console.log = augmentedLog();
+console.error = augmentedError();
+console.debug = augmentedDebug();
 
 // Connect to MongoDB database
 mongoose.connect('mongodb://mongo/chat-room', { useNewUrlParser: true, useUnifiedTopology: true });
