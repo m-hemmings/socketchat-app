@@ -8,7 +8,15 @@ console.error = augmentedError();
 console.debug = augmentedDebug();
 
 // Connect to MongoDB database
-mongoose.connect('mongodb://mongo/chat-room', { useNewUrlParser: true, useUnifiedTopology: true });
+(async function() {
+  try {
+    await mongoose.connect('mongodb://mongo/chat-room', { useNewUrlParser: true, useUnifiedTopology: true });
+    console.log('Connected to MongoDB database');
+  } catch (err) {
+    console.error('Failed to connect to MongoDB database:', err);
+    process.exit(1);
+  }
+})();
 
 const MessageSchema = new mongoose.Schema({
   username: {
@@ -49,17 +57,19 @@ const io = socketio(server, {
   }
 });
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log('A user connected');
 
   // Retrieve and send previous messages
-  MessageModel.find().sort({ timestamp: -1 }).limit(10).exec((err, messages) => {
-    if (err) return console.error(err);
+  try {
+    const messages = await MessageModel.find().sort({ timestamp: -1 }).limit(10).exec();
     socket.emit('previous-messages', messages.reverse().map(m => Message.fromJSON(m.toJSON())));
-  });
+  } catch (err) {
+    console.error(err);
+  }
 
   // Handle incoming messages
-  socket.on('message', (message) => {
+  socket.on('message', async (message) => {
     console.log(`Received message: ${JSON.stringify(message)}`);
 
     // Broadcast the message to all connected clients
@@ -71,9 +81,11 @@ io.on('connection', (socket) => {
       content: message.content 
     });
 
-    newMessage.save((err) => {
-      if (err) return console.error(err);
-    });
+    try {
+      await newMessage.save();
+    } catch (err) {
+      console.error(err);
+    }
   });
 
   // Handle disconnections
