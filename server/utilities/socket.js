@@ -7,7 +7,7 @@ module.exports = function(io) {
     // Retrieve and send previous messages
     try {
       const messages = await MessageModel.find().sort({ timestamp: -1 }).limit(10).exec();
-      socket.emit('previous-messages', messages.reverse().map(m => Message.fromJSON(m.toJSON())));
+      socket.emit('previous-messages', messages.map(m => Message.fromJSON(m.toJSON())));
     } catch (err) {
       console.error(err);
     }
