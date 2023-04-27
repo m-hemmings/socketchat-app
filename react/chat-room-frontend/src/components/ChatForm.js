@@ -1,69 +1,39 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
+import UsernameModal from './UsernameModal';
 import { setUsername } from '../utilities/user';
 
-function ChatForm({ handleSubmit, newMessage, setNewMessage, setUsernameCallback }) {
-  const [showModal, setShowModal] = useState(false);
-  const inputRef = useRef();
+function ChatForm({ inputRef, message, setNewMessage, handleSubmit, setUsernameCallback, username }) {
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleModalSubmit = (event) => {
-    event.preventDefault();
     setUsername(event, setUsernameCallback);
-    setShowModal(false);
+    setModalVisible(false);
   };
-
-  const handleModalCancel = () => {
-    setShowModal(false);
-  };
-
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    await handleSubmit(event);
-    setNewMessage('');
-    inputRef.current.focus();
-  };
-
-
-  useEffect(() => {
-  if (inputRef.current) {
-    setNewMessage('');
-    inputRef.current.focus();
-  }
-}, []);
-
 
   return (
-    <>
-      <form onSubmit={handleFormSubmit}>
+    <div className="chat-form-container">
+      <form onSubmit={handleSubmit}>
         <input
-          id="message-input"
           type="text"
-          value={newMessage}
+          placeholder="Type your message..."
+          value={message}
           onChange={(event) => setNewMessage(event.target.value)}
-          placeholder="Enter message"
           ref={inputRef}
+          required
         />
         <button type="submit">Send</button>
       </form>
-
-      {showModal && (
-        <div className="modal">
-          <form onSubmit={handleModalSubmit}>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter username"
-              
-            />
-            <button type="submit">Set username</button>
-            <button onClick={handleModalCancel}>Cancel</button>
-          </form>
-        </div>
-      )}
-
-      {!showModal && (
-        <button onClick={() => setShowModal(true)}>Set username</button>
-      )}
-    </>
+      <button onClick={() => setModalVisible(true)}>Change username</button>
+      <UsernameModal showModal={modalVisible} handleModalSubmit={handleModalSubmit} handleModalCancel={() => setModalVisible(false)}>
+        <h2>Change username</h2>
+        <form onSubmit={handleModalSubmit}>
+          <label htmlFor="username">New username:</label>
+          <input type="text" id="username" name="username" required />
+          <button type="submit">Change</button>
+        </form>
+      </UsernameModal>
+      <p>Logged in as: {username}</p>
+    </div>
   );
 }
 
