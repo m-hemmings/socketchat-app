@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import socketIOClient from 'socket.io-client';
 import ChatMessages from './ChatMessages';
 import ChatForm from './ChatForm';
+import UserList from './UserList';
 import '../css/styles.css';
 
 const ENDPOINT = "http://localhost:3123";
@@ -12,6 +13,7 @@ function ChatRoom() {
   const [username, setUsername] = useState("");
   const [socket, setSocket] = useState(null);
   const inputRef = useRef(null);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const newSocket = socketIOClient(ENDPOINT);
@@ -39,6 +41,10 @@ function ChatRoom() {
     socket.on("username", (username) => {
       setUsername(username);
     });
+
+    socket.on("users", (users) => {
+      setUsers(users);
+    });
   }, [socket, messages]);
 
   const handleSubmit = (event) => {
@@ -64,6 +70,9 @@ function ChatRoom() {
     <div className="container">
       <div className="chat-container">
         <ChatMessages messages={messages} />
+      </div>
+      <div className="users-container">
+        <UserList users={users} />
       </div>
       <ChatForm
         inputRef={inputRef}

@@ -24,21 +24,19 @@ const MessageSchema = new mongoose.Schema({
     required: true
   },
   content: {
-    type: Object, // Change the data type to Object
-    required: true
-  },
-  timestamp: { type: Date, default: Date.now },
+    text: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now }
+  }
 });
 
 class Message {
-  constructor(username, content, timestamp) {
+  constructor(username, content) {
     this.username = username;
     this.content = content;
-    this.timestamp = timestamp || new Date();
   }
 
   static fromJSON(json) {
-    return new Message(json.username, json.content, new Date(json.timestamp));
+    return new Message(json.username, json.content);
   }
 }
 
@@ -72,13 +70,16 @@ io.on('connection', async (socket) => {
   socket.on('message', async (message) => {
     console.log(`Received message: ${JSON.stringify(message)}`);
 
-    // Broadcast the message to all connected clients
+    // Broadcast the content of the message object to all connected clients
     io.emit('message', message);
 
     // Save message to database
     const newMessage = new MessageModel({ 
       username: message.username,
-      content: message.content 
+      content: {
+        text: message.content.text,
+        timestamp: new Date().getTime()
+      }
     });
 
     try {
