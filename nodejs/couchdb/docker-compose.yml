@@ -1,0 +1,17 @@
+version: '3'
+services:  
+  couchdb:
+    build:
+      context: ./couchdb
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '5984:5984'
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: admin
+    volumes:
+      - chat-couchdb-data:/opt/couchdb/data
+
+volumes:
+  chat-couchdb-data:

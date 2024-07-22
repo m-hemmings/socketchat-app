@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Greeting App</title>
+    <script src="https://cdn.jsdelivr.net/npm/@gradio/core"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="interface"></div>
+    <script>
+      const iface = JSON.parse('{{ gradio_interface.interface_json()|safe }}');
+      iface.target = document.getElementById('interface');
+      gr.interface(iface);
+    </script>
+  </body>
+</html>

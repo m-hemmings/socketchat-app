@@ -1,0 +1,9 @@
+{
+    "name": "python-web-server",
+    "version": "1.0.0",
+    "dependencies": {
+      "flask": "^2.0.1",
+      "gradio": "^2.1.6"
+    }
+  }
+  
